@@ -1,0 +1,27 @@
+# Building a Local AI Intelligence Layer
+
+At Devian Labs, we believe that developers shouldn't have to be system administrators. One of the ways we're simplifying the developer experience is through our local AI Intelligence Layer.
+
+## Local-First AI
+
+We made a conscious decision to keep all AI processing local. When you ask Devian, "Why is my memory usage so high?", the analysis happens entirely on your CPU/GPU.
+
+### How it Works
+
+1. **State Snapshotting**: Devian takes a structured snapshot of your system (active processes, network sockets, file descriptors, etc.).
+2. **Local Reasoning**: This data is passed to a small, optimized Large Language Model (LLM) running on your device.
+3. **Actionable Suggestions**: The model translates complex system state into plain English advice.
+
+## Example Use Cases
+
+### Port Conflicts
+Instead of just seeing that port 8080 is blocked, Devian can tell you: "PID 9924 (a hanging node process) is holding port 8080. Would you like to terminate it?"
+
+### Disk Bloat
+Devian identifies that your `~/.npm` cache is 12GB and hasn't been used in 3 months. It suggests running a safe prune.
+
+## Looking Ahead
+
+We're exploring even deeper integrations, such as auto-fixing environment drift and predicting when your system is about to run out of resources.
+
+Stay tuned for more updates!
