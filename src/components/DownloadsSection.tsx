@@ -53,7 +53,7 @@ export function DownloadsSection() {
     const oldReleases = releases.length > 1 ? releases.slice(1) : [];
 
     // Fallback links if there are no GitHub releases found (keeps local MVP working)
-    const macLink = latestRelease ? getTargetAssetUrl(latestRelease.assets, ".dmg") : "/downloads/v0.2.2/Devian_Desktop_0.2.2_aarch64.dmg";
+    const macLink = latestRelease ? getTargetAssetUrl(latestRelease.assets, ".dmg") : "/downloads/v0.2.2/Devian.Desktop_0.2.2_aarch64.dmg";
     const macSize = latestRelease ? getTargetAssetSize(latestRelease.assets, ".dmg") : "9.8 MB";
 
     const handleCopyCommand = () => {
