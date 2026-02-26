@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Download, ChevronDown } from "lucide-react";
+import { Download, ChevronDown, Monitor, Box, Terminal, Copy } from "lucide-react";
 
 interface Asset {
     name: string;
@@ -22,9 +22,10 @@ export function DownloadsSection() {
     const [releases, setReleases] = useState<GithubRelease[]>([]);
     const [loading, setLoading] = useState(true);
     const [showHistory, setShowHistory] = useState(false);
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
-        fetch("https://api.github.com/repos/devian-labs/devian-desktop/releases")
+        fetch("https://api.github.com/repos/devian-labs/devian-web/releases")
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
@@ -61,6 +62,12 @@ export function DownloadsSection() {
     const linuxLink = latestRelease ? getTargetAssetUrl(latestRelease.assets, ".deb") : "/downloads/v0.2.1-beta/Devian.Desktop_0.2.1_amd64.deb";
     const linuxSize = latestRelease ? getTargetAssetSize(latestRelease.assets, ".deb") : "4.2 MB";
 
+    const handleCopyCommand = () => {
+        navigator.clipboard.writeText("brew install --cask --no-quarantine devian-labs/tap/devian-desktop");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
     return (
         <section id="download" className="px-6 md:px-8 py-20 md:py-32 max-w-5xl mx-auto text-center border-t border-white/[0.05]">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 md:mb-6 tracking-tight">Ready to take control?</h2>
@@ -73,68 +80,94 @@ export function DownloadsSection() {
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white/20"></div>
                 </div>
             ) : (
-                <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 max-w-4xl mx-auto">
-                    {/* macOS */}
-                    <a href={macLink || "#"} download={!!macLink} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
-                        <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
-                            <AppleLogo className="h-5 w-5 md:h-8 md:w-8 text-black" />
-                        </div>
-                        <div className="text-left">
-                            <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-black/50 mb-1">macOS (Apple Silicon)</div>
-                            <div className="text-lg md:text-2xl font-black">{macLink ? "Download .dmg" : "Coming Soon"}</div>
-                            {macSize && <div className="text-xs text-black/50 font-medium mt-1">{macSize}</div>}
-                        </div>
-                    </a>
+                <div className="flex flex-col items-center justify-center gap-6 md:gap-8 max-w-4xl mx-auto">
 
-                    {/* Windows 
-                    <a href={winLink || "#"} download={!!winLink} className={`bg-white/[0.02] border border-white/[0.05] text-white p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${winLink ? "cursor-pointer hover:bg-white/[0.05] hover:border-white/[0.1] hover:scale-[1.02]" : "opacity-60 grayscale cursor-default"}`}>
-                        <div className="h-10 w-10 md:h-16 md:w-16 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0">
-                            <Monitor className="h-5 w-5 md:h-8 md:w-8 text-white/50" />
+                    {/* Homebrew Terminal Block */}
+                    <div className="w-full max-w-2xl bg-[#0A0A0C] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group">
+                        <div className="bg-white/5 px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <Terminal className="h-4 w-4 text-white/50" />
+                                <span className="text-xs font-mono text-white/50">Terminal (macOS)</span>
+                            </div>
+                            <button
+                                onClick={handleCopyCommand}
+                                className="text-white/40 hover:text-white transition-colors flex items-center gap-1.5 text-xs bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg"
+                                aria-label="Copy to clipboard"
+                            >
+                                <Copy className="h-3.5 w-3.5" />
+                                {copied ? "Copied!" : "Copy"}
+                            </button>
                         </div>
-                        <div className="text-left">
-                            <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-1">Windows</div>
-                            <div className="text-lg md:text-2xl font-black text-white/90">{winLink ? "Download .msi" : "Coming Soon"}</div>
-                            {winSize && <div className="text-xs text-white/40 font-medium mt-1">{winSize}</div>}
+                        <div className="p-5 md:p-6 overflow-x-auto">
+                            <code className="text-sm md:text-base font-mono text-[#4ADE80] break-words whitespace-pre-wrap">
+                                <span className="text-white/30 mr-3">$</span>
+                                brew install --cask --no-quarantine devian-labs/tap/devian-desktop
+                            </code>
                         </div>
-                    </a>
-                    */}
+                    </div>
 
-                    {/* Linux 
-                    <a href={linuxLink || "#"} download={!!linuxLink} className={`bg-white/[0.02] border border-white/[0.05] text-white p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${linuxLink ? "cursor-pointer hover:bg-white/[0.05] hover:border-white/[0.1] hover:scale-[1.02]" : "opacity-60 grayscale cursor-default"}`}>
-                        <div className="h-10 w-10 md:h-16 md:w-16 bg-white/5 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0">
-                            <Box className="h-5 w-5 md:h-8 md:w-8 text-white/50" />
-                        </div>
-                        <div className="text-left">
-                            <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-1">Linux</div>
-                            <div className="text-lg md:text-2xl font-black text-white/90">{linuxLink ? "Download .deb" : "Coming Soon"}</div>
-                            {linuxSize && <div className="text-xs text-white/40 font-medium mt-1">{linuxSize}</div>}
-                        </div>
-                    </a>
-                    */}
-                </div>
-            )}
+                    <div className="flex items-center gap-4 w-full max-w-2xl">
+                        <div className="h-px bg-white/10 flex-1"></div>
+                        <span className="text-xs text-white/40 font-medium tracking-widest uppercase">Or Download Directly</span>
+                        <div className="h-px bg-white/10 flex-1"></div>
+                    </div>
 
-            <p className="mt-8 md:mt-12 text-xs md:text-sm text-white/40 font-medium flex flex-col sm:flex-row items-center justify-center gap-2">
-                <span>Current Version: <span className="text-white/80">v0.2.1-beta</span></span>
-                <span className="hidden sm:inline opacity-50">•</span>
-                <span>Requires macOS 12+</span>
-            </p>
+                    <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 w-full max-w-2xl mx-auto">
+                        {/* macOS */}
+                        <a href={macLink || "#"} download={!!macLink} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
+                            <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
+                                <AppleLogo className="h-5 w-5 md:h-8 md:w-8 text-black" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-black/50 mb-1">macOS (Apple Silicon)</div>
+                                <div className="text-lg md:text-2xl font-black">{macLink ? "Download .dmg" : "Coming Soon"}</div>
+                                {macSize && <div className="text-xs text-black/50 font-medium mt-1">{macSize}</div>}
+                            </div>
+                        </a>
 
-            {/* Version History Table */}
-            {oldReleases.length > 0 && (
-                <div className="mt-16 md:mt-24 max-w-4xl mx-auto">
-                    <button
-                        onClick={() => setShowHistory(!showHistory)}
-                        className="mx-auto flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
-                    >
-                        <span>{showHistory ? "Hide previous versions" : "Looking for older versions?"}</span>
-                        <ChevronDown className={`h-4 w-4 transition-transform ${showHistory ? "rotate-180" : ""}`} />
-                    </button>
+                        {/* Windows */}
+                        <a href={winLink || "#"} download={!!winLink} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${winLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
+                            <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
+                                <Monitor className="h-5 w-5 md:h-8 md:w-8 text-black" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-black/50 mb-1">Windows (x64)</div>
+                                <div className="text-lg md:text-2xl font-black">{winLink ? "Download .msi" : "Coming Soon"}</div>
+                                {winSize && <div className="text-xs text-black/50 font-medium mt-1">{winSize}</div>}
+                            </div>
+                        </a>
 
-                    {showHistory && (
-                        <div className="mt-8 bg-[#0A0A0C] border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm text-white/70">
+                        {/* Linux */}
+                        <a href={linuxLink || "#"} download={!!linuxLink} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${linuxLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
+                            <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
+                                <Box className="h-5 w-5 md:h-8 md:w-8 text-black" />
+                            </div>
+                            <div className="text-left">
+                                <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-black/50 mb-1">Linux (deb)</div>
+                                <div className="text-lg md:text-2xl font-black">{linuxLink ? "Download .deb" : "Coming Soon"}</div>
+                                {linuxSize && <div className="text-xs text-black/50 font-medium mt-1">{linuxSize}</div>}
+                            </div>
+                        </a>
+                    </div>
+
+                    <p className="mt-8 md:mt-12 text-xs md:text-sm text-white/40 font-medium flex flex-col sm:flex-row items-center justify-center gap-2">
+                        <span>Current Version: <span className="text-white/80">{latestRelease?.tag_name || "v0.2.1-beta"}</span></span>
+                        <span className="hidden sm:inline opacity-50">•</span>
+                        <span>Requires macOS 12+</span>
+                    </p>
+
+                    {/* Version History */}
+                    <div className="mt-12 md:mt-16 w-full max-w-2xl">
+                        <button
+                            onClick={() => setShowHistory(!showHistory)}
+                            className="flex items-center justify-center gap-2 text-white/50 hover:text-white transition-colors text-sm font-medium mx-auto"
+                        >
+                            View Version History <ChevronDown className={`h-4 w-4 transition-transform ${showHistory ? "rotate-180" : ""}`} />
+                        </button>
+
+                        {showHistory && oldReleases.length > 0 && (
+                            <div className="mt-8 md:mt-10 bg-[#0A0A0C] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                                <table className="min-w-full divide-y divide-white/5">
                                     <thead className="bg-white/5 border-b border-white/10">
                                         <tr>
                                             <th className="px-6 py-4 font-medium text-white/90">Version</th>
@@ -175,8 +208,8 @@ export function DownloadsSection() {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             )}
         </section>
