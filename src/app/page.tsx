@@ -52,7 +52,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full max-w-md sm:max-w-none mx-auto">
-              <a href="/downloads/v0.2.1-beta/Devian_Desktop_0.2.1_aarch64.dmg" download className="group flex items-center gap-3 bg-white text-black px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/90 transition-all w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)] hover:scale-[1.02] active:scale-[0.98]">
+              <a href="/downloads/v0.2.2/Devian_Desktop_0.2.2_aarch64.dmg" download className="group flex items-center gap-3 bg-white text-black px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/90 transition-all w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)] hover:scale-[1.02] active:scale-[0.98]">
                 <AppleLogo className="h-5 w-5" />
                 <span className="text-base md:text-lg">Download for macOS (Apple Silicon)</span>
               </a>
