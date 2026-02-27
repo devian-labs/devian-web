@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, ChevronDown, Monitor, Box, Terminal, Copy } from "lucide-react";
+import pkgData from "../../package.json";
 
 interface Asset {
     name: string;
@@ -53,7 +54,7 @@ export function DownloadsSection() {
     const oldReleases = releases.length > 1 ? releases.slice(1) : [];
 
     // Fallback links if there are no GitHub releases found (keeps local MVP working)
-    const macLink = latestRelease ? getTargetAssetUrl(latestRelease.assets, ".dmg") : "/downloads/v0.2.2/Devian.Desktop_0.2.2_aarch64.dmg";
+    const macLink = latestRelease ? getTargetAssetUrl(latestRelease.assets, ".dmg") : `/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`;
     const macSize = latestRelease ? getTargetAssetSize(latestRelease.assets, ".dmg") : "9.8 MB";
 
     const handleCopyCommand = () => {
@@ -121,7 +122,7 @@ export function DownloadsSection() {
                     </div>
 
                     <p className="mt-8 md:mt-12 text-xs md:text-sm text-white/40 font-medium flex flex-col sm:flex-row items-center justify-center gap-2">
-                        <span>Current Version: <span className="text-white/80">{latestRelease?.tag_name || "v0.2.2"}</span></span>
+                        <span>Current Version: <span className="text-white/80">{latestRelease?.tag_name || `v${pkgData.version}`}</span></span>
                         <span className="hidden sm:inline opacity-50">•</span>
                         <span>Requires macOS 12+</span>
                     </p>
