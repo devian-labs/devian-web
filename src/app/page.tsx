@@ -8,9 +8,9 @@ import pkgData from "../../package.json";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#070709] text-white selection:bg-primary/30 font-sans">
+    <div className="flex flex-col min-h-screen bg-[#121212] text-white selection:bg-primary/30 font-sans">
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 sticky top-0 bg-[#070709]/80 backdrop-blur-xl z-50">
+      <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 sticky top-0 bg-[#121212]/80 backdrop-blur-xl z-50">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(101,140,194,0.3)]">
             <Activity className="h-5 w-5 text-primary" />
@@ -19,7 +19,7 @@ export default function Home() {
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70 tracking-wide">
-          <Link href="/docs" className="hover:text-white transition-colors">Documentation</Link>
+          <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
           <Link href="#download" className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)]">
             Download
           </Link>
@@ -53,12 +53,19 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full max-w-md sm:max-w-none mx-auto">
-              <a href={`/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`} download className="group flex items-center gap-3 bg-white text-black px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/90 transition-all w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)] hover:scale-[1.02] active:scale-[0.98]">
+              <a href={`/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`} onClick={() => {
+                if (typeof window !== 'undefined' && window.gtag) {
+                  window.gtag('event', 'download_mac_dmg_hero', {
+                    event_category: 'download',
+                    event_label: `v${pkgData.version}`,
+                  });
+                }
+              }} download className="group flex items-center gap-3 bg-white text-black px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/90 transition-all w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)] hover:scale-[1.02] active:scale-[0.98]">
                 <AppleLogo className="h-5 w-5" />
                 <span className="text-base md:text-lg">Download for macOS (Apple Silicon)</span>
               </a>
-              <Link href="/docs" className="group flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] text-white px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/[0.08] transition-all w-full sm:w-auto justify-center backdrop-blur-md hover:border-white/[0.15]">
-                <span className="text-base md:text-lg">Read the Docs</span>
+              <Link href="/blog" className="group flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] text-white px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/[0.08] transition-all w-full sm:w-auto justify-center backdrop-blur-md hover:border-white/[0.15]">
+                <span className="text-base md:text-lg">Read the Blog</span>
                 <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -103,8 +110,8 @@ export default function Home() {
 
         {/* Quick Stats / Logo Cloud Alternative */}
         <section className="py-16 md:py-24 border-y border-white/[0.05] bg-white/[0.01] relative overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-[#070709] to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-[#070709] to-transparent z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-[#121212] to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-[#121212] to-transparent z-10" />
 
           <div className="max-w-6xl mx-auto px-6 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center relative z-0">
             <div>
@@ -152,9 +159,9 @@ export default function Home() {
                   Auto-detect local repositories, identify tech stacks instantly, and track project status in real-time across your entire filesystem.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-3">
-                  <div className="px-4 py-2 rounded-xl bg-[#0A0A0C] border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-white" />Next.js</div>
-                  <div className="px-4 py-2 rounded-xl bg-[#0A0A0C] border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#3776AB]" />Python</div>
-                  <div className="px-4 py-2 rounded-xl bg-[#0A0A0C] border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#DEA584]" />Rust</div>
+                  <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-white" />Next.js</div>
+                  <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#3776AB]" />Python</div>
+                  <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/[0.05] text-sm font-medium flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#DEA584]" />Rust</div>
                 </div>
               </div>
             </div>
@@ -207,7 +214,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="relative z-10 mt-10 p-4 rounded-2xl bg-[#0A0A0C] border border-white/[0.05] inline-block font-mono text-sm text-white/40">
+              <div className="relative z-10 mt-10 p-4 rounded-2xl bg-white/5 border border-white/[0.05] inline-block font-mono text-sm text-white/40">
                 Scanning... <span className="text-amber-400">Found 14.2GB in 43 node_modules folders.</span>
               </div>
             </div>
@@ -220,7 +227,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="px-6 md:px-8 py-8 md:py-12 border-t border-white/[0.05] text-center text-white/40 bg-[#0A0A0C]">
+      <footer className="px-6 md:px-8 py-8 md:py-12 border-t border-white/[0.05] text-center text-white/40 bg-white/5">
         <p className="text-xs md:text-sm font-medium tracking-wide">© 2026 Devian Labs. Built for developers by developers.</p>
       </footer>
     </div>

@@ -60,7 +60,22 @@ export function DownloadsSection() {
     const handleCopyCommand = () => {
         navigator.clipboard.writeText("brew install --cask --no-quarantine devian-labs/tap/devian-desktop");
         setCopied(true);
+        if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag("event", "copy_brew_command", {
+                event_category: "engagement",
+                event_label: "macOS Terminal",
+            });
+        }
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const trackDownload = (version: string, type: 'latest' | 'old') => {
+        if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag("event", `download_mac_dmg_${type}`, {
+                event_category: "download",
+                event_label: version,
+            });
+        }
     };
 
     return (
@@ -109,7 +124,7 @@ export function DownloadsSection() {
 
                     <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 w-full max-w-2xl mx-auto">
                         {/* macOS */}
-                        <a href={macLink || "#"} download={!!macLink} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
+                        <a href={macLink || "#"} download={!!macLink} onClick={() => { if (macLink) trackDownload(latestRelease?.tag_name || `v${pkgData.version}`, 'latest'); }} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
                             <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
                                 <AppleLogo className="h-5 w-5 md:h-8 md:w-8 text-black" />
                             </div>
@@ -163,7 +178,7 @@ export function DownloadsSection() {
                                                         })}
                                                     </td>
                                                     <td className="px-6 py-4">
-                                                        {mLink ? <a href={mLink} download className="text-white hover:underline flex items-center gap-1.5"><Download className="h-3.5 w-3.5" /> .dmg</a> : <span className="text-white/20">—</span>}
+                                                        {mLink ? <a href={mLink} download onClick={() => { trackDownload(release.tag_name, 'old'); }} className="text-white hover:underline flex items-center gap-1.5"><Download className="h-3.5 w-3.5" /> .dmg</a> : <span className="text-white/20">—</span>}
                                                     </td>
                                                     {/*
                                                     <td className="px-6 py-4">

@@ -2,63 +2,74 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, User, ArrowRight, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const posts = [
     {
         title: "Introducing Devian: The Control Center for Modern Developers",
         excerpt: "We're excited to announce the public beta of Devian, a unified environment manager building a local intelligence layer for your dev machine.",
-        date: "Feb 22, 2026",
+        date: "February 22, 2026",
         author: "Devian Team",
         slug: "introducing-devian",
+        tags: ["Release", "Environment", "Tools"],
     },
     {
         title: "Building a Local AI Intelligence Layer",
         excerpt: "How we use local LLMs to help you understand why port 3000 is blocked and what's eating your RAM.",
-        date: "Feb 15, 2026",
+        date: "February 15, 2026",
         author: "Engineering",
         slug: "local-ai-layer",
+        tags: ["AI", "Architecture", "Local LLMs"],
     },
 ];
 
 export default function BlogIndex() {
     return (
-        <div className="min-h-screen bg-[#121212] text-white">
+        <div className="min-h-screen bg-[#121212] text-white selection:bg-primary/30 font-sans">
             {/* Navigation */}
-            <nav className="flex items-center justify-between px-8 py-6 border-b border-white/5 sticky top-0 bg-[#121212]/80 backdrop-blur-md z-50">
+            <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 sticky top-0 bg-[#121212]/80 backdrop-blur-xl z-50">
                 <Link href="/" className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/20">
-                        <MessageSquare className="h-6 w-6 text-primary" />
+                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(101,140,194,0.3)]">
+                        <MessageSquare className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="text-2xl font-bold tracking-tight">Blog</span>
+                    <span className="text-xl font-bold tracking-tight">Devian</span>
                 </Link>
-                <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors">Home</Link>
+                <Link href="/" className="text-sm font-medium text-white/70 hover:text-white transition-colors">Home</Link>
             </nav>
 
-            <main className="max-w-4xl mx-auto px-8 py-20">
-                <header className="mb-16">
-                    <h1 className="text-5xl font-extrabold tracking-tight mb-4">Latest Updates</h1>
-                    <p className="text-xl text-muted-foreground">News, guides, and engineering logs from the Devian Labs team.</p>
+            <main className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24">
+                <header className="mb-12 md:mb-16">
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-3 text-white">Recent Posts</h1>
                 </header>
 
-                <div className="space-y-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                     {posts.map((post, idx) => (
                         <motion.article
                             key={idx}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="group"
+                            transition={{ delay: idx * 0.1, duration: 0.5, ease: "easeOut" }}
+                            className="flex"
                         >
-                            <Link href={`/blog/${post.slug}`} className="block">
-                                <div className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-primary mb-3">
-                                    <span className="flex items-center gap-1.5"><Calendar className="h-3 w-3" /> {post.date}</span>
-                                    <span className="flex items-center gap-1.5"><User className="h-3 w-3" /> {post.author}</span>
-                                </div>
-                                <h2 className="text-3xl font-bold mb-4 group-hover:text-primary transition-colors">{post.title}</h2>
-                                <p className="text-lg text-muted-foreground leading-relaxed mb-6">{post.excerpt}</p>
-                                <div className="flex items-center gap-2 text-sm font-bold group-hover:gap-3 transition-all">
-                                    Read Article <ArrowRight className="h-4 w-4" />
+                            <Link href={`/blog/${post.slug}`} className="block w-full">
+                                <div className="h-full bg-white/[0.02] border border-white/5 hover:border-white/10 hover:bg-white/[0.04] rounded-[16px] md:rounded-[20px] p-6 md:p-8 transition-all duration-300 flex flex-col justify-start">
+                                    <time className="text-sm font-medium text-white/40 mb-3 block">{post.date}</time>
+
+                                    <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white/95 leading-tight group-hover:text-primary transition-colors">{post.title}</h2>
+
+                                    <p className="text-base md:text-lg text-white/60 leading-relaxed font-light mb-6 md:mb-8 flex-grow">{post.excerpt}</p>
+
+                                    <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-white/[0.05]">
+                                        {post.tags.map(tag => (
+                                            <span
+                                                key={tag}
+                                                className="px-3.5 py-1.5 rounded-full bg-white/[0.04] text-xs font-semibold text-white/60 lowercase tracking-wide"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </Link>
                         </motion.article>
