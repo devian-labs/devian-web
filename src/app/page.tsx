@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Download, Monitor, ChevronRight, Activity, Box, Network, HardDrive, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { DownloadsSection } from "@/components/DownloadsSection";
+import { PricingSection } from "@/components/PricingSection";
 import pkgData from "../../package.json";
 
 export default function Home() {
@@ -221,6 +222,9 @@ export default function Home() {
           </div>
         </section>
 
+
+        {/* Pricing Section */}
+        <PricingSection />
 
         {/* Download Section */}
         <DownloadsSection />
