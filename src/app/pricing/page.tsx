@@ -69,7 +69,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70 tracking-wide">
                     <Link href="/" className="hover:text-white transition-colors">Home</Link>
-                    <a href="https://buy.stripe.com/test_5kQ9AVeTd5vzcwOb058k800" className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)]">
+                    <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"} className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)]">
                         Buy Devian Pro
                     </a>
                 </div>
@@ -114,7 +114,7 @@ export default function FeaturesPage() {
                             For professional developers who want absolute control, intelligent insights, and AI automation.
                         </p>
                         <a
-                            href="https://buy.stripe.com/test_5kQ9AVeTd5vzcwOb058k800"
+                            href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"}
                             className="w-full text-center py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-medium transition-colors shadow-[0_0_30px_-5px_var(--tw-shadow-color)] shadow-primary/30 relative z-10"
                         >
                             Buy Devian Pro
@@ -172,7 +172,7 @@ export default function FeaturesPage() {
                         Join other professional developers building faster with Devian Pro. One-time payment, lifetime updates.
                     </p>
                     <a
-                        href="https://buy.stripe.com/test_5kQ9AVeTd5vzcwOb058k800"
+                        href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"}
                         className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:scale-105 shadow-[0_0_40px_-10px_var(--tw-shadow-color)] shadow-primary"
                     >
                         Get Devian Pro Today

@@ -93,7 +93,7 @@ export function PricingSection() {
                     </ul>
 
                     {/* Stripe Checkout link */}
-                    <a href="https://buy.stripe.com/test_5kQ9AVeTd5vzcwOb058k800" className="w-full text-center py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(101,140,194,0.4)] relative z-10">
+                    <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"} className="w-full text-center py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(101,140,194,0.4)] relative z-10">
                         Buy Devian Pro
                     </a>
 
