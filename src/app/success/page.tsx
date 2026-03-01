@@ -118,17 +118,17 @@ function SuccessContent() {
 
                     {status === "success" && (
                         <div className="space-y-6">
-                            <div className="bg-black/50 border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4 group hover:border-white/10 transition-colors">
-                                <code className="text-primary font-mono text-sm sm:text-base break-all tracking-wider font-bold">
+                            <div
+                                onClick={handleCopy}
+                                className="bg-black/50 border border-white/5 rounded-xl p-4 flex items-center justify-between gap-4 group hover:border-white/10 transition-colors cursor-pointer w-full overflow-hidden"
+                                title="Click to copy license key"
+                            >
+                                <code className="text-primary font-mono text-sm sm:text-base tracking-wider font-bold select-none whitespace-nowrap overflow-x-auto overflow-y-hidden hide-scrollbar flex-1 text-left min-w-0 hide-scrollbar pb-1">
                                     {licenseKey}
                                 </code>
-                                <button
-                                    onClick={handleCopy}
-                                    className="w-10 h-10 shrink-0 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors text-white/70 hover:text-white"
-                                    aria-label="Copy license key"
-                                >
+                                <div className="w-10 h-10 shrink-0 bg-white/5 group-hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors text-white/70 group-hover:text-white relative z-10">
                                     {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                                </button>
+                                </div>
                             </div>
 
                             <div className="text-xs text-white/40 text-center">

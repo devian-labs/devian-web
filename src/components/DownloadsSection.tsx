@@ -108,9 +108,9 @@ export function DownloadsSection() {
                                 {copied ? "Copied!" : "Copy"}
                             </button>
                         </div>
-                        <div className="p-5 md:p-6 overflow-x-auto">
-                            <code className="text-sm md:text-base font-mono text-[#4ADE80] break-words whitespace-pre-wrap">
-                                <span className="text-white/30 mr-3">$</span>
+                        <div className="p-5 md:p-6 overflow-x-auto hide-scrollbar flex w-full">
+                            <code className="text-sm md:text-base font-mono text-[#4ADE80] whitespace-nowrap flex items-center w-full pr-4">
+                                <span className="text-white/30 mr-3 flex-shrink-0">$</span>
                                 brew install --cask --no-quarantine devian-labs/tap/devian-desktop
                             </code>
                         </div>
