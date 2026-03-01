@@ -20,6 +20,7 @@ export default function Home() {
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70 tracking-wide">
+          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
           <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
           <Link href="#download" className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)]">
             Download
