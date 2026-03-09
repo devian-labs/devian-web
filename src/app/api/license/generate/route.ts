@@ -1,26 +1,15 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
 
 export async function GET(req: Request) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "dummy_key", {
-        apiVersion: "2026-02-25.clover",
-    });
     const { searchParams } = new URL(req.url);
-    const sessionId = searchParams.get("session_id");
+    const orderId = searchParams.get("order_id");
 
-    if (!sessionId) {
-        return new NextResponse("Session ID is required", { status: 400 });
+    if (!orderId) {
+        return new NextResponse("Order ID is required", { status: 400 });
     }
 
     try {
-        // Verify the session against Stripe
-        const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-        if (session.payment_status !== "paid") {
-            return new NextResponse("Payment not complete", { status: 400 });
-        }
-
-        // Search Keygen for the license matching this Stripe Session ID
+        // Search Keygen for the license matching this Razorpay Order ID
         const accountId = process.env.VITE_KEYGEN_ACCOUNT_ID;
         const keygenToken = process.env.KEYGEN_API_TOKEN;
 
@@ -29,7 +18,7 @@ export async function GET(req: Request) {
         }
 
         // Use Keygen's metadata query
-        const response = await fetch(`https://api.keygen.sh/v1/accounts/${accountId}/licenses?metadata[stripe_session_id]=${sessionId}`, {
+        const response = await fetch(`https://api.keygen.sh/v1/accounts/${accountId}/licenses?metadata[razorpay_order_id]=${orderId}`, {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Authorization': `Bearer ${keygenToken}`
@@ -54,7 +43,7 @@ export async function GET(req: Request) {
         });
 
     } catch (e: any) {
-        console.error("Failed to resolve session:", e);
+        console.error("Failed to resolve order:", e);
         return new NextResponse("Server Error", { status: 500 });
     }
 }

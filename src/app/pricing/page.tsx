@@ -1,11 +1,13 @@
-import { CheckCircle2, ShieldAlert, Check, X, ArrowRight, Zap, Crown, Bot, Database, FolderGit2 } from "lucide-react";
+"use client";
+
+import { CheckCircle2, ShieldAlert, Check, X, ArrowRight, Zap, Crown, Bot, Database, FolderGit2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Activity } from "lucide-react";
+import { RazorpayButton } from "@/components/PricingSection";
+import { useState, useEffect } from "react";
 
-export const metadata = {
-    title: "Devian | Features & Pricing",
-    description: "Compare Devian Community and Devian Pro plans. Upgrade to unlock powerful local AI capabilities and unrestricted docker management.",
-};
+// Moved metadata to layout.tsx or a separate server component if needed since this is now a client component.
+// Or we can just remove it for now if next.js complains, but usually it must be in a server component.
 
 const FEATURES = [
     {
@@ -55,6 +57,20 @@ const FEATURES = [
 ];
 
 export default function FeaturesPage() {
+    const [priceData, setPriceData] = useState<{ symbol: string; displayAmount: string } | null>(null);
+
+    useEffect(() => {
+        fetch('/api/pricing')
+            .then(res => res.json())
+            .then(data => {
+                setPriceData(data);
+            })
+            .catch(err => {
+                // Fallback to USD on error
+                setPriceData({ symbol: '$', displayAmount: '20' });
+            });
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#121212] text-white selection:bg-primary/30">
             {/* Navigation */}
@@ -69,9 +85,7 @@ export default function FeaturesPage() {
                 </div>
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/70 tracking-wide">
                     <Link href="/" className="hover:text-white transition-colors">Home</Link>
-                    <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"} className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)]">
-                        Buy Devian Pro
-                    </a>
+                    <RazorpayButton className="bg-primary/10 text-primary border border-primary/20 px-5 py-2 rounded-full hover:bg-primary hover:text-white transition-all shadow-[0_0_10px_rgba(101,140,194,0.1)] text-sm" />
                 </div>
             </nav>
 
@@ -89,7 +103,7 @@ export default function FeaturesPage() {
                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-24">
                     <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8 flex flex-col">
                         <h3 className="text-2xl font-bold mb-2">Community</h3>
-                        <div className="text-4xl font-bold mb-6">$0<span className="text-lg text-zinc-500 font-normal">/forever</span></div>
+                        <div className="text-4xl font-bold mb-6">{priceData?.symbol || "$"}0<span className="text-lg text-zinc-500 font-normal">/forever</span></div>
                         <p className="text-zinc-400 mb-8 flex-1">
                             Perfect for students and hobbyists who need a better way to view their local stack.
                         </p>
@@ -109,16 +123,22 @@ export default function FeaturesPage() {
                         <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
                             Devian Pro <Zap className="w-5 h-5 text-primary" />
                         </h3>
-                        <div className="text-4xl font-bold mb-6">$29<span className="text-lg text-zinc-500 font-normal">/lifetime</span></div>
+                        <div className="text-4xl font-bold mb-6 flex items-baseline gap-2">
+                            {priceData ? (
+                                <>
+                                    {priceData.symbol}{priceData.displayAmount}
+                                    <span className="text-lg text-zinc-500 font-normal">/lifetime</span>
+                                </>
+                            ) : (
+                                <div className="h-10 w-24 bg-zinc-800 rounded animate-pulse" />
+                            )}
+                        </div>
                         <p className="text-zinc-400 mb-8 flex-1 relative z-10">
                             For professional developers who want absolute control, intelligent insights, and AI automation.
                         </p>
-                        <a
-                            href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"}
+                        <RazorpayButton
                             className="w-full text-center py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-medium transition-colors shadow-[0_0_30px_-5px_var(--tw-shadow-color)] shadow-primary/30 relative z-10"
-                        >
-                            Buy Devian Pro
-                        </a>
+                        />
                         <p className="text-center text-xs text-zinc-500 mt-3 relative z-10">Valid for up to 3 personal devices</p>
                     </div>
                 </div>
@@ -171,12 +191,11 @@ export default function FeaturesPage() {
                     <p className="text-zinc-400 mb-8">
                         Join other professional developers building faster with Devian Pro. One-time payment, lifetime updates.
                     </p>
-                    <a
-                        href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"}
+                    <RazorpayButton
                         className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all hover:scale-105 shadow-[0_0_40px_-10px_var(--tw-shadow-color)] shadow-primary"
                     >
                         Get Devian Pro Today
-                    </a>
+                    </RazorpayButton>
                 </div>
             </main>
         </div>

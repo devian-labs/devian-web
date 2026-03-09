@@ -1,62 +1,62 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import crypto from "crypto";
 import { Resend } from "resend";
 
-
 export async function POST(req: Request) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "dummy_key", {
-        apiVersion: "2026-02-25.clover", // Adjust to the version you are using
-    });
-
-    const body = await req.text();
-    const signature = req.headers.get("stripe-signature") as string;
-
-    let event: Stripe.Event;
-
     try {
-        event = stripe.webhooks.constructEvent(
-            body,
-            signature,
-            process.env.STRIPE_WEBHOOK_SECRET as string
-        );
-    } catch (error: any) {
-        console.error(`Webhook signature verification failed: ${error.message}`);
-        return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
-    }
+        const body = await req.text();
+        const signature = req.headers.get("x-razorpay-signature") as string;
+        const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET as string;
 
-    // Handle the checkout session completion
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object as Stripe.Checkout.Session;
-        const customerEmail = session.customer_details?.email;
-        const paymentIntentId = session.payment_intent as string;
-
-        if (!customerEmail) {
-            console.error("No customer email found in session.");
-            return new NextResponse("Invalid Session Data", { status: 400 });
+        if (!signature || !webhookSecret) {
+            console.error("Missing webhook signature or secret");
+            return new NextResponse("Invalid request", { status: 400 });
         }
 
-        try {
-            if (session.payment_status === "paid") {
-                // Create a new license in Keygen
-                await createLicenseForKeygen(customerEmail, session.id, paymentIntentId);
+        // Verify the signature
+        const expectedSignature = crypto
+            .createHmac("sha256", webhookSecret)
+            .update(body)
+            .digest("hex");
+
+        if (expectedSignature !== signature) {
+            console.error("Webhook signature verification failed");
+            return new NextResponse("Invalid signature", { status: 400 });
+        }
+
+        // Parse event
+        const event = JSON.parse(body);
+
+        // Handle the order.paid event
+        if (event.event === "order.paid") {
+            const paymentEntity = event.payload.payment.entity;
+            const orderEntity = event.payload.order.entity;
+
+            const customerEmail = paymentEntity.email;
+            const paymentId = paymentEntity.id;
+            const orderId = orderEntity.id;
+
+            if (!customerEmail) {
+                console.error("No customer email found in Razorpay payment data.");
+                return new NextResponse("Invalid Session Data", { status: 400 });
             }
-        } catch (e: any) {
-            console.error("Failed to process order:", e);
-            // Stripe will retry the webhook if we fail. 
-            // In production, we'd log this, potentially to Sentry or PostHog
-            return new NextResponse("Internal Server Error", { status: 500 });
-        }
-    }
 
-    // Return a 200 response to acknowledge receipt of the event
-    return new NextResponse(JSON.stringify({ received: true }), { status: 200 });
+            // Create a new license in Keygen
+            await createLicenseForKeygen(customerEmail, orderId, paymentId);
+        }
+
+        return new NextResponse(JSON.stringify({ received: true }), { status: 200 });
+    } catch (error: any) {
+        console.error(`Webhook Error: ${error.message}`);
+        return new NextResponse(`Webhook Error: ${error.message}`, { status: 500 });
+    }
 }
 
 // -------------------------------------------------------------
 // Core Business Logic
 // -------------------------------------------------------------
 
-async function createLicenseForKeygen(email: string, sessionId: string, paymentIntentId: string) {
+async function createLicenseForKeygen(email: string, orderId: string, paymentId: string) {
     const accountId = process.env.VITE_KEYGEN_ACCOUNT_ID;
     const policyId = process.env.VITE_KEYGEN_POLICY_ID;
     const keygenToken = process.env.KEYGEN_API_TOKEN;
@@ -79,8 +79,8 @@ async function createLicenseForKeygen(email: string, sessionId: string, paymentI
                 attributes: {
                     name: email,
                     metadata: {
-                        stripe_payment_id: paymentIntentId,
-                        stripe_session_id: sessionId
+                        razorpay_payment_id: paymentId,
+                        razorpay_order_id: orderId
                     }
                 },
                 relationships: {

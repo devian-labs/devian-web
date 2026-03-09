@@ -1,6 +1,92 @@
-import { Check, ShieldCheck, Zap } from "lucide-react";
+"use client";
+
+import { Check, ShieldCheck, Zap, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useRazorpay } from "react-razorpay";
+
+export function RazorpayButton({
+    className = "",
+    children,
+    disabled = false
+}: {
+    className?: string;
+    children?: React.ReactNode;
+    disabled?: boolean;
+}) {
+    const router = useRouter();
+    // @ts-ignore
+    const { Razorpay } = useRazorpay();
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handlePayment = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsProcessing(true);
+        try {
+            // 1. Fetch order details from backend
+            const orderRes = await fetch('/api/razorpay/order', { method: 'POST' });
+            if (!orderRes.ok) {
+                throw new Error("Failed to create order");
+            }
+            const order = await orderRes.json();
+
+            // 2. Initialize Razorpay Checkout
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+                amount: order.amount,
+                currency: order.currency,
+                name: "Devian",
+                description: "Devian Pro Lifetime License",
+                order_id: order.orderId,
+                handler: function (response: any) {
+                    router.push(`/pricing/success?order_id=${response.razorpay_order_id}`);
+                },
+                theme: {
+                    color: "#0a0a0a"
+                }
+            };
+
+            const rzp = new Razorpay(options);
+
+            rzp.on("payment.failed", function (response: any) {
+                console.error("Payment Failed", response.error);
+                setIsProcessing(false);
+            });
+
+            rzp.open();
+
+        } catch (error) {
+            console.error("Error initiating payment:", error);
+            setIsProcessing(false);
+        }
+    };
+
+    return (
+        <button
+            onClick={handlePayment}
+            disabled={isProcessing || disabled}
+            className={className || "w-full text-center py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(101,140,194,0.4)] relative z-10 disabled:opacity-75 disabled:hover:scale-100 flex items-center justify-center gap-2"}
+        >
+            {isProcessing ? <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</> : (children || "Buy Devian Pro")}
+        </button>
+    );
+}
 
 export function PricingSection() {
+    const [priceData, setPriceData] = useState<{ symbol: string; displayAmount: string } | null>(null);
+
+    useEffect(() => {
+        fetch('/api/pricing')
+            .then(res => res.json())
+            .then(data => {
+                setPriceData(data);
+            })
+            .catch(err => {
+                // Fallback to USD on error
+                setPriceData({ symbol: '$', displayAmount: '20' });
+            });
+    }, []);
+
     return (
         <section id="pricing" className="px-6 md:px-8 py-24 max-w-7xl mx-auto border-t border-white/[0.05]">
             <div className="text-center mb-16">
@@ -16,7 +102,7 @@ export function PricingSection() {
                     <div className="mb-8">
                         <h3 className="text-2xl font-bold mb-2 text-white">Devian Community</h3>
                         <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-4xl font-black text-white">$0</span>
+                            <span className="text-4xl font-black text-white">{priceData?.symbol || "$"}0</span>
                             <span className="text-white/40 font-medium">forever</span>
                         </div>
                         <p className="text-white/50 text-sm">Perfect for individual developers looking for a better way to monitor their local machines.</p>
@@ -63,8 +149,14 @@ export function PricingSection() {
                             <Zap className="w-5 h-5 text-primary" /> Devian Pro
                         </h3>
                         <div className="flex items-baseline gap-2 mb-4">
-                            <span className="text-4xl font-black text-white">$29</span>
-                            <span className="text-white/40 font-medium">one-time</span>
+                            {priceData ? (
+                                <>
+                                    <span className="text-4xl font-black text-white">{priceData.symbol}{priceData.displayAmount}</span>
+                                    <span className="text-white/40 font-medium">one-time</span>
+                                </>
+                            ) : (
+                                <div className="h-10 w-24 bg-white/5 rounded animate-pulse" />
+                            )}
                         </div>
                         <p className="text-primary/80 text-sm">Professional tools for power users. Own your license forever with no subscriptions.</p>
                     </div>
@@ -92,10 +184,8 @@ export function PricingSection() {
                         </li>
                     </ul>
 
-                    {/* Stripe Checkout link */}
-                    <a href={process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK || "#"} className="w-full text-center py-4 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(101,140,194,0.4)] relative z-10">
-                        Buy Devian Pro
-                    </a>
+                    {/* Razorpay Checkout Button */}
+                    <RazorpayButton />
 
                     <div className="mt-4 text-center text-xs text-white/40 flex items-center justify-center gap-1.5 relative z-10">
                         <ShieldCheck className="w-3.5 h-3.5" /> 14-day money-back guarantee. No accounts required.
