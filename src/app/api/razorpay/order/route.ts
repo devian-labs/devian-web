@@ -1,5 +1,15 @@
 import { NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
+import pricingConfig from '@/config/pricing.json';
+
+type PricingConfigType = {
+    [key: string]: {
+        amount: number;
+        currency: string;
+        symbol: string;
+        displayAmount: string;
+    };
+};
 
 export async function POST(req: Request) {
     try {
@@ -10,18 +20,12 @@ export async function POST(req: Request) {
 
         const country = req.headers.get('x-vercel-ip-country') || process.env.TEST_COUNTRY_CODE || 'US';
 
-        // Pricing logic
-        let amount = 2000; // $20.00 USD (in cents)
-        let currency = 'USD';
-
-        if (country === 'IN') {
-            amount = 120000; // ₹1200.00 INR (in paise)
-            currency = 'INR';
-        }
+        const config = pricingConfig as PricingConfigType;
+        const pricing = config[country] || config['US'];
 
         const options = {
-            amount,
-            currency,
+            amount: pricing.amount,
+            currency: pricing.currency,
             receipt: `receipt_${Date.now()}`,
             payment_capture: 1 // Auto capture
         };

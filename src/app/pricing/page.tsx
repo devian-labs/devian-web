@@ -11,47 +11,36 @@ import { useState, useEffect } from "react";
 
 const FEATURES = [
     {
-        category: "General & UI",
+        category: "System & Infrastructure",
         items: [
-            { name: "Native macOS & Windows app", community: true, pro: true },
-            { name: "Modern Dark UI & Animations", community: true, pro: true },
-            { name: "VS Code / Cursor Integration", community: true, pro: true },
+            { name: "System monitoring", community: true, pro: true },
+            { name: "Process manager", community: true, pro: true },
+            { name: "Port monitor", community: true, pro: true },
+            { name: "Docker viewer", community: true, pro: true },
+            { name: "Docker cleanup tools", community: false, pro: true },
+            { name: "Smart cleanup", community: false, pro: true },
         ]
     },
     {
-        category: "Local Repositories",
+        category: "Workspace & Version Control",
         items: [
-            { name: "Scan & View Local Projects", community: true, pro: true },
-            { name: "Open in Editor/Terminal", community: true, pro: true },
-            { name: "Find unused & stale repos", community: false, pro: true },
-            { name: "1-Click node_modules cleanup", community: false, pro: true },
-            { name: "Identify broken dependencies", community: false, pro: true },
+            { name: "Project discovery", community: true, pro: true },
+            { name: "Script runner", community: true, pro: true },
+            { name: "Git basic operations", community: true, pro: true },
+            { name: "Advanced git tools", community: false, pro: true },
+            { name: "Dev environment insights", community: false, pro: true },
         ]
     },
     {
-        category: "Docker & Infrastructure",
+        category: "Search & Intelligence",
         items: [
-            { name: "View Running Containers", community: true, pro: true },
-            { name: "Start/Stop Containers", community: true, pro: true },
-            { name: "Cross-container Insights", community: false, pro: true },
-            { name: "Database Schema Visualizer", community: false, pro: true },
-        ]
-    },
-    {
-        category: "System & Network",
-        items: [
-            { name: "View Active Ports", community: true, pro: true },
-            { name: "Kill Processes holding ports", community: true, pro: true },
-            { name: "CPU & Memory Analytics", community: true, pro: true },
-            { name: "Time-series Resource Tracking", community: false, pro: true },
-        ]
-    },
-    {
-        category: "AI & Intelligence",
-        items: [
-            { name: "Local LLM Orchestration", community: false, pro: true },
-            { name: "Smart Environment Analytics", community: false, pro: true },
-            { name: "Auto-fix Dependency Errors", community: false, pro: true },
+            { name: "Global search", community: true, pro: true },
+            { name: "AI chat", community: true, pro: true },
+            { name: "Repository indexing (max 3)", community: true, pro: true },
+            { name: "Unlimited repo indexing", community: false, pro: true },
+            { name: "AI explanations", community: false, pro: true },
+            { name: "Dependency auto fixes", community: false, pro: true },
+            { name: "Repo content search", community: false, pro: true },
         ]
     }
 ];

@@ -1,0 +1,14 @@
+{
+  "US": {
+    "amount": 1990,
+    "currency": "USD",
+    "symbol": "$",
+    "displayAmount": "19.90"
+  },
+  "IN": {
+    "amount": 49900,
+    "currency": "INR",
+    "symbol": "₹",
+    "displayAmount": "499"
+  }
+}

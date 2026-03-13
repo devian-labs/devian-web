@@ -43,6 +43,11 @@ export function RazorpayButton({
                 },
                 theme: {
                     color: "#0a0a0a"
+                },
+                modal: {
+                    ondismiss: function () {
+                        setIsProcessing(false);
+                    }
                 }
             };
 
@@ -111,23 +116,43 @@ export function PricingSection() {
                     <ul className="space-y-4 mb-10 flex-1">
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <span className="text-white/80">Local repository scanning</span>
+                            <span className="text-white/80">System monitoring</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <span className="text-white/80">Active port monitoring</span>
+                            <span className="text-white/80">Process manager</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <span className="text-white/80">Basic Docker status & containers</span>
+                            <span className="text-white/80">Port monitor</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <span className="text-white/80">One-by-one dependency folder cleanup</span>
+                            <span className="text-white/80">Docker viewer</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <span className="text-white/80">100% telemetry-free</span>
+                            <span className="text-white/80">Project discovery</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <span className="text-white/80">Git basic operations</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <span className="text-white/80">Script runner</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <span className="text-white/80">Global search</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <span className="text-white/80">AI chat</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <span className="text-white/80">Repository indexing (max 3)</span>
                         </li>
                     </ul>
 
@@ -168,19 +193,35 @@ export function PricingSection() {
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-primary shrink-0" />
-                            <span className="text-white/90 font-medium">Bulk cleanup of node_modules</span>
+                            <span className="text-white/90 font-medium">Unlimited repo indexing</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-primary shrink-0" />
-                            <span className="text-white/90 font-medium">Smart unused repository insights</span>
+                            <span className="text-white/90 font-medium">AI explanations</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-primary shrink-0" />
-                            <span className="text-white/90 font-medium">Advanced project health analytics</span>
+                            <span className="text-white/90 font-medium">Dependency auto fixes</span>
                         </li>
                         <li className="flex items-start gap-3">
                             <Check className="w-5 h-5 text-primary shrink-0" />
-                            <span className="text-white/90 font-medium">Up to 3 devices per license</span>
+                            <span className="text-white/90 font-medium">Docker cleanup tools</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-primary shrink-0" />
+                            <span className="text-white/90 font-medium">Advanced git tools</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-primary shrink-0" />
+                            <span className="text-white/90 font-medium">Smart cleanup</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-primary shrink-0" />
+                            <span className="text-white/90 font-medium">Dev environment insights</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                            <Check className="w-5 h-5 text-primary shrink-0" />
+                            <span className="text-white/90 font-medium">Repo content search</span>
                         </li>
                     </ul>
 
