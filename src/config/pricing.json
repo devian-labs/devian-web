@@ -6,9 +6,9 @@
     "displayAmount": "19.90"
   },
   "IN": {
-    "amount": 49900,
+    "amount": 900,
     "currency": "INR",
     "symbol": "₹",
-    "displayAmount": "499"
+    "displayAmount": "9"
   }
 }
