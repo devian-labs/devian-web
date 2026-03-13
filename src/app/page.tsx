@@ -9,7 +9,7 @@ import pkgData from "../../package.json";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#121212] text-white selection:bg-primary/30 font-sans">
+    <div id="top" className="flex flex-col min-h-screen bg-[#121212] text-white selection:bg-primary/30 font-sans">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-white/5 sticky top-0 bg-[#121212]/80 backdrop-blur-xl z-50">
         <div className="flex items-center gap-3">

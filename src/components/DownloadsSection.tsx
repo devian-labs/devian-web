@@ -58,7 +58,13 @@ export function DownloadsSection() {
     const macSize = latestRelease ? getTargetAssetSize(latestRelease.assets, ".dmg") : "9.8 MB";
 
     const handleCopyCommand = () => {
-        navigator.clipboard.writeText("brew install --cask --no-quarantine devian-labs/tap/devian-desktop");
+        navigator.clipboard.writeText(
+            [
+                "brew tap devian-labs/tap",
+                "brew install --cask devian-desktop",
+                "xattr -dr com.apple.quarantine /Applications/Devian\\ Desktop.app",
+            ].join("\n"),
+        );
         setCopied(true);
         if (typeof window !== 'undefined' && window.gtag) {
             window.gtag("event", "copy_brew_command", {
@@ -109,14 +115,19 @@ export function DownloadsSection() {
                             </button>
                         </div>
                         <div className="p-5 md:p-6 overflow-x-auto hide-scrollbar flex w-full">
-                            <code className="text-sm md:text-base font-mono text-[#4ADE80] whitespace-nowrap flex items-center w-full pr-4">
-                                <span className="text-white/30 mr-3 flex-shrink-0">$</span>
-                                brew install --cask --no-quarantine devian-labs/tap/devian-desktop
+                            <code className="text-sm md:text-base font-mono text-[#4ADE80] whitespace-pre text-left w-full pr-4">
+                                <span className="text-white/30 mr-3">$</span>
+                                {"brew tap devian-labs/tap"}
+                                {"\n$ "}
+                                {"brew install --cask devian-desktop"}
+                                {"\n\n# If macOS blocks the app"}
+                                {"\n$ "}
+                                {"xattr -dr com.apple.quarantine /Applications/Devian\\ Desktop.app"}
                             </code>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4 w-full max-w-2xl">
+                    <div className="flex items-center gap-4 w-full max-w-2xl mt-8">
                         <div className="h-px bg-white/10 flex-1"></div>
                         <span className="text-xs text-white/40 font-medium tracking-widest uppercase">Or Download Directly</span>
                         <div className="h-px bg-white/10 flex-1"></div>
@@ -124,7 +135,14 @@ export function DownloadsSection() {
 
                     <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 md:gap-6 w-full max-w-2xl mx-auto">
                         {/* macOS */}
-                        <a href={macLink || "#"} download={!!macLink} onClick={() => { if (macLink) trackDownload(latestRelease?.tag_name || `v${pkgData.version}`, 'latest'); }} className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}>
+                        <a
+                            href={macLink || "#"}
+                            download={!!macLink}
+                            onClick={() => {
+                                if (macLink) trackDownload(latestRelease?.tag_name || `v${pkgData.version}`, 'latest');
+                            }}
+                            className={`bg-white hover:bg-white/90 text-black p-5 md:p-8 rounded-[24px] md:rounded-[32px] flex items-center justify-center gap-4 md:gap-6 transition-all group flex-1 w-full sm:min-w-[300px] ${macLink ? "cursor-pointer shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_60px_rgba(255,255,255,0.2)] hover:scale-[1.02]" : "opacity-50 grayscale cursor-not-allowed"}`}
+                        >
                             <div className="h-10 w-10 md:h-16 md:w-16 bg-[#F5F5F7] rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0">
                                 <AppleLogo className="h-5 w-5 md:h-8 md:w-8 text-black" />
                             </div>
@@ -135,6 +153,12 @@ export function DownloadsSection() {
                             </div>
                         </a>
                     </div>
+
+                    <p className="mt-4 text-xs md:text-sm text-white/60 text-left md:text-center max-w-2xl">
+                    If macOS blocks Devian Desktop, it's because the app is not yet
+notarized with Apple. This will be resolved soon. Until then,
+you can run the command above to remove the quarantine attribute.
+                    </p>
 
                     <p className="mt-8 md:mt-12 text-xs md:text-sm text-white/40 font-medium flex flex-col sm:flex-row items-center justify-center gap-2">
                         <span>Current Version: <span className="text-white/80">{latestRelease?.tag_name || `v${pkgData.version}`}</span></span>
