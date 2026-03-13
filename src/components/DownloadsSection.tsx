@@ -62,7 +62,7 @@ export function DownloadsSection() {
             [
                 "brew tap devian-labs/tap",
                 "brew install --cask devian-desktop",
-                "xattr -dr com.apple.quarantine /Applications/Devian.app",
+                "xattr -dr com.apple.quarantine /Applications/Devian\\ Desktop.app",
             ].join("\n"),
         );
         setCopied(true);
@@ -122,7 +122,7 @@ export function DownloadsSection() {
                                 {"brew install --cask devian-desktop"}
                                 {"\n\n# If macOS blocks the app"}
                                 {"\n$ "}
-                                {"xattr -dr com.apple.quarantine /Applications/Devian.app"}
+                                {"xattr -dr com.apple.quarantine /Applications/Devian\\ Desktop.app"}
                             </code>
                         </div>
                     </div>
