@@ -6,8 +6,45 @@ import Link from "next/link";
 import { DownloadsSection } from "@/components/DownloadsSection";
 import { PricingSection } from "@/components/PricingSection";
 import pkgData from "../../package.json";
+import { useState, useEffect } from "react";
+
+interface Asset {
+    name: string;
+    browser_download_url: string;
+    size: number;
+}
+
+interface GithubRelease {
+    id: number;
+    name: string;
+    tag_name: string;
+    published_at: string;
+    html_url: string;
+    assets: Asset[];
+}
 
 export default function Home() {
+  const [macLink, setMacLink] = useState<string>(`/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`);
+  const [releaseTag, setReleaseTag] = useState<string>(`v${pkgData.version}`);
+
+  useEffect(() => {
+    fetch("https://api.github.com/repos/devian-labs/devian-web/releases")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const latestRelease: GithubRelease = data[0];
+          const dmgAsset = latestRelease.assets.find((a) => a.name.endsWith(".dmg"));
+          if (dmgAsset) {
+            setMacLink(dmgAsset.browser_download_url);
+            setReleaseTag(latestRelease.tag_name);
+          }
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch releases", err);
+      });
+  }, []);
+
   return (
     <div id="top" className="flex flex-col min-h-screen bg-[#121212] text-white selection:bg-primary/30 font-sans">
       {/* Navigation */}
@@ -55,11 +92,11 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 w-full max-w-md sm:max-w-none mx-auto">
-              <a href={`/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`} onClick={() => {
+              <a href={macLink} onClick={() => {
                 if (typeof window !== 'undefined' && window.gtag) {
                   window.gtag('event', 'download_mac_dmg_hero', {
                     event_category: 'download',
-                    event_label: `v${pkgData.version}`,
+                    event_label: releaseTag,
                   });
                 }
               }} download className="group flex items-center gap-3 bg-white text-black px-6 md:px-10 py-4 md:py-5 rounded-2xl font-bold hover:bg-white/90 transition-all w-full sm:w-auto justify-center shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)] hover:scale-[1.02] active:scale-[0.98]">
