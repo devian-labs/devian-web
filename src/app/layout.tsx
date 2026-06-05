@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Devian | Control Center for Your Local Environment",
   description: "Understand and control everything running on your machine — from projects and ports to Docker containers and disk usage — with AI powered insights.",
-  keywords: ["developer tools", "local environment", "docker management", "port monitor", "project scanner", "macOS app", "dev tools"],
+  keywords: ["developer tools", "local environment", "docker management", "port monitor", "project scanner", "cross-platform developer tools", "windows app", "linux app", "dev tools"],
   authors: [{ name: "Devian Labs" }],
   openGraph: {
     type: "website",

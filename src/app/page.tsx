@@ -23,21 +23,33 @@ interface GithubRelease {
     assets: Asset[];
 }
 
+type DetectedOS = "mac" | "windows" | "linux";
+
 export default function Home() {
   const [macLink, setMacLink] = useState<string>(`/downloads/v${pkgData.version}/Devian.Desktop_${pkgData.version}_aarch64.dmg`);
+  const [winLink, setWinLink] = useState<string | null>(null);
+  const [linuxLink, setLinuxLink] = useState<string | null>(null);
   const [releaseTag, setReleaseTag] = useState<string>(`v${pkgData.version}`);
+  const [detectedOS, setDetectedOS] = useState<DetectedOS>("mac");
 
   useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes("windows")) setDetectedOS("windows");
+    else if (ua.includes("linux")) setDetectedOS("linux");
+    else setDetectedOS("mac");
+
     fetch("https://api.github.com/repos/devian-labs/devian-web/releases")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const latestRelease: GithubRelease = data[0];
           const dmgAsset = latestRelease.assets.find((a) => a.name.endsWith(".dmg"));
-          if (dmgAsset) {
-            setMacLink(dmgAsset.browser_download_url);
-            setReleaseTag(latestRelease.tag_name);
-          }
+          const exeAsset = latestRelease.assets.find((a) => a.name.endsWith(".exe"));
+          const appimageAsset = latestRelease.assets.find((a) => a.name.endsWith(".AppImage"));
+          if (dmgAsset) setMacLink(dmgAsset.browser_download_url);
+          if (exeAsset) setWinLink(exeAsset.browser_download_url);
+          if (appimageAsset) setLinuxLink(appimageAsset.browser_download_url);
+          setReleaseTag(latestRelease.tag_name);
         }
       })
       .catch((err) => {
